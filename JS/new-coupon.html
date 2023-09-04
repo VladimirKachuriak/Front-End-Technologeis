@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="register-title">
+        <h2>Add New Coupon</h2>
+    </div>
+    <form class="coupon-form">
+        <div class="form-row">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company">
+        </div>
+        <div class="form-row">
+            <label for="item-name">Item Name</label>
+            <input type="text" id="item-name" name="item-name">
+        </div>
+        <div class="form-row">
+            <label for="category">Category</label>
+            <select id="category" name="category">
+                <option value="food">Food</option>
+                <option value="clothing">Clothing</option>
+                <option value="electronics">Electronics</option>
+            </select>
+        </div>
+
+        <div class="form-row description-input">
+            <label for="short-description">Short Description</label>
+            <textarea class="fixed-textarea" name="short-description" rows=2></textarea>
+        </div>
+
+        <div class="form-row">
+            <label for="price">Price</label>
+            <input type="number" id="price" name="price">
+        </div>
+
+        <div class="form-row">
+            <label for="date">Valid to</label>
+            <input type="datetime-local" id="date" name="date">
+        </div>
+        <div class="form-row description-input">
+            <label for="long=description">Long Description:</label>
+            <textarea class="fixed-textarea" name="long-description" rows=2></textarea>
+        </div>
+
+        <div class="form-row">
+            <label for="image">Images</label>
+            <input type="file" id="image" name="image">
+        </div>
+        <div class="buttons">
+            <button type="button" class="cancel-button">Back</button>
+            <button type="submit" class="accept-button">Save</button>
+        </div>
+    </form>
+    <script>
+        const form = document.querySelector('.coupon-form');
+        const companyInput = form.querySelector('#company');
+        const itemNameInput = form.querySelector('#item-name');
+        const categorySelect = form.querySelector('#category');
+        const shortDescriptionInput = form.querySelector('[name="short-description"]');
+        const priceInput = form.querySelector('#price');
+        const dateInput = form.querySelector('#date');
+        const longDescriptionInput = form.querySelector('[name="long-description"]');
+        const imageInput = form.querySelector('#image');
+
+        
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); 
+            let imageDataUrl;
+            const reader = new FileReader();
+            if (imageInput.files.length > 0) {
+                reader.readAsDataURL(imageInput.files[0]);
+                
+                reader.addEventListener("load", () => {
+                    console.log("sfd");
+                    imageDataUrl = reader.result;
+
+
+                   
+                    const couponData = {
+                        company: companyInput.value,
+                        itemName: itemNameInput.value,
+                        category: categorySelect.value,
+                        shortDescription: shortDescriptionInput.value,
+                        price: parseFloat(priceInput.value),
+                        date: dateInput.value,
+                        longDescription: longDescriptionInput.value,
+                        image: imageDataUrl
+                
+                    };
+
+                    const storedItems = localStorage.getItem('items');
+                    const items = storedItems ? JSON.parse(storedItems) : [];
+
+                   
+                    items.unshift(couponData);
+                    localStorage.setItem('items', JSON.stringify(items));
+
+                    form.reset();
+                })
+            }
+        });
+
+    </script>
+</body>
+
+</html>

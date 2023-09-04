@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="catalog-background">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <span class="material-icons">reorder</span>
+                <span class="logo-name">Logo</span>
+            </div>
+            <div class="navbar-center">
+                <input type="text" id="searchInput" placeholder="Search by item name">
+                <select>
+                    <option>All categories</option>
+                    <option>Best price</option>
+                    <option>Best rating</option>
+                </select>
+            </div>
+            <div class="navbar-right">
+                <a href="www.google"><span class="material-icons">favorite</span></a>
+                <a href="#"><span class="material-icons">shopping_cart</span></a>
+                <button class="login-button">Login</button>
+                <span class="pipe">|</span>
+                <button class="signup-button">Sign up</button>
+            </div>
+        </nav>
+
+        <div class="category-strip">
+            <div class="image-wrapper">
+                <img
+                    src="https://assets.glamour.de/photos/64ba50ad9aff4318f6569a5c/16:9/pass/Beauty-Shops-Aufmacher.jpg">
+                <div class="overlay">
+                    <div class="overlay-text">beauty</div>
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <img
+                    src="https://media.istockphoto.com/id/1312674414/photo/accelerating-to-100mph.jpg?s=612x612&w=0&k=20&c=tvVmoLfA-mH95OlDs0crXNy57GvpVndpFztlW3MPhZg=">
+                <div class="overlay">
+                    <div class="overlay-text">transport</div>
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <img src="https://www.expatica.com/app/uploads/sites/5/2014/05/french-food.jpg">
+                <div class="overlay">
+                    <div class="overlay-text">food</div>
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <img src="https://i.ytimg.com/vi/M63NUcP-RaI/maxresdefault.jpg">
+                <div class="overlay">
+                    <div class="overlay-text">food</div>
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <img
+                    src="https://www.insureon.com/-/media/blog/posts/2016/photo_photographer-winter-session.jpg?h=370&iar=0&w=750&rev=ea1cf43b74d54cf5af9173421b84f19b">
+                <div class="overlay">
+                    <div class="overlay-text">photo session</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="catalog">
+            <!-- div class="item">
+                <div class="square"></div>
+                <div class="card-body">
+                    <div class="item-details">
+                        <h3>Product Name</h3>
+                        <span class="material-icons">favorite</span>
+                    </div>
+                    <div class="item-details">
+                        <h5>Some brief description</h5>
+                        <h5 class="date">Expired 3 days</h5>
+                    </div>
+                    <div class="item-details">
+                        <p class="price">$49.99</p>
+                        <button>Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="image-wrapper">
+                    <img src="https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2022/07/what_to_know_apples_green_red_732x549_thumb.jpg"
+                        alt="Image Description">
+                </div>
+                <div class="card-body">
+                    <div class="item-details">
+                        <h3>Product Name</h3>
+                        <span class="material-icons">favorite</span>
+                    </div>
+                    <div class="item-details">
+                        <h5>Some brief description</h5>
+                        <h5 class="date">Expired 3 days</h5>
+                    </div>
+                    <div class="item-details">
+                        <p class="price">$49.99</p>
+                        <button>Add to Cart</button>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+        <div class="scroll-buttons">
+            <div class="buttons">
+                <button type="button" class="cancel-button" id="lastScrollTopBtn">Last scroll</button>
+                <button type="submit" class="accept-button" id="scrollToTopBtn">top</button>
+            </div>
+        </div>
+        <div id="loadingSpinner" class="loading-spinner"></div>
+
+        <script>
+            const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+            const lastScrollToTopBtn = document.getElementById("lastScrollTopBtn");
+
+            let lastScrollY = window.scrollY;
+            function scrollToTop() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            }
+
+            function returnToLastScrollPosition() {
+                const currentScrollPosition = window.scrollY;
+                localStorage.setItem('scrollPosition', currentScrollPosition);
+
+
+                window.scrollTo(0, currentScrollPosition);
+                window.scrollTo({
+                    top: lastScrollY,
+                    behavior: "smooth"
+                });
+
+            }
+
+            lastScrollToTopBtn.addEventListener("click", () => {
+                returnToLastScrollPosition();
+            });
+
+            scrollToTopBtn.addEventListener("click", () => {
+                scrollToTop();
+            });
+
+            function getExpirationMessage(itemDate) {
+                const expirationDate = new Date(itemDate);
+                const timeDifference = expirationDate - new Date();
+                const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+                if (daysDifference >= 0) {
+                    return `Expires in ${daysDifference} day${daysDifference !== 1 ? 's' : ''}`;
+                } else {
+                    return `Expired ${Math.abs(daysDifference)} day${Math.abs(daysDifference) !== 1 ? 's' : ''} ago`;
+                }
+            }
+
+            const searchInput = document.getElementById('searchInput');
+            const debouncedSearch = _.debounce(updateItems, 1000);
+            searchInput.addEventListener('input', event => {
+                const query = event.target.value;
+                debouncedSearch(query);
+            });
+            let items = JSON.parse(localStorage.getItem('items')) || [];
+            function updateItems(query) {
+                const catalog = document.querySelector('.catalog');
+                catalog.innerHTML = '';
+                currentPage = 1;
+                currentSearchQuery = query;
+                console.log(query);
+                loadMoreItems();
+
+
+            }
+            function renderItems(itemsArray) {
+                const catalog = document.querySelector('.catalog');
+
+
+
+                const catalogDiv = document.querySelector('.catalog');
+
+                itemsArray.forEach(item => {
+
+                    const itemContainer = document.createElement('div');
+                    itemContainer.classList.add('item');
+
+
+                    const squareDiv = document.createElement('div');
+                    squareDiv.classList.add('image-wrapper');
+                    const img = document.createElement('img');
+                    img.setAttribute("src", item.image);
+                    squareDiv.appendChild(img);
+                    itemContainer.appendChild(squareDiv);
+
+
+                    const cardBodyDiv = document.createElement('div');
+                    cardBodyDiv.classList.add('card-body');
+
+
+                    const itemDetails1 = document.createElement('div');
+                    itemDetails1.classList.add('item-details');
+                    const productName = document.createElement('h3');
+                    productName.textContent = item.itemName;
+                    const favoriteIcon = document.createElement('span');
+                    favoriteIcon.classList.add('material-icons');
+                    favoriteIcon.textContent = 'favorite';
+                    itemDetails1.appendChild(productName);
+                    itemDetails1.appendChild(favoriteIcon);
+
+
+                    const itemDetails2 = document.createElement('div');
+                    itemDetails2.classList.add('item-details');
+                    const briefDescription = document.createElement('h5');
+                    briefDescription.textContent = item.shortDescription;
+                    const date = document.createElement('h5');
+                    date.classList.add('date');
+                    date.textContent = getExpirationMessage(item.date);
+                    itemDetails2.appendChild(briefDescription);
+                    itemDetails2.appendChild(date);
+
+
+                    const itemDetails3 = document.createElement('div');
+                    itemDetails3.classList.add('item-details');
+                    const price = document.createElement('p');
+                    price.classList.add('price');
+                    price.textContent = `$${item.price}`;
+                    const addToCartButton = document.createElement('button');
+                    addToCartButton.textContent = 'Add to Cart';
+                    itemDetails3.appendChild(price);
+                    itemDetails3.appendChild(addToCartButton);
+
+
+                    cardBodyDiv.appendChild(itemDetails1);
+                    cardBodyDiv.appendChild(itemDetails2);
+                    cardBodyDiv.appendChild(itemDetails3);
+
+
+                    itemContainer.appendChild(cardBodyDiv);
+
+
+                    catalogDiv.appendChild(itemContainer);
+                });
+            }
+
+
+            let currentPage = 1;
+            const initialItemsToShow = 4;
+            const itemsPerPage = 3;
+            let currentSearchQuery = '';
+
+            let startIndex;
+            let endIndex;
+            loadMoreItems();
+
+            function loadMoreItems() {
+
+                if (currentPage == 1) {
+                    startIndex = (currentPage - 1) * itemsPerPage;
+                    endIndex = initialItemsToShow;
+                } else {
+                    startIndex = endIndex;
+                    endIndex = startIndex + itemsPerPage;
+                }
+                let itemsToRender = items;
+
+                if (currentSearchQuery) {
+                    itemsToRender = items.filter(item =>
+                        item.itemName.toLowerCase().includes(currentSearchQuery.toLowerCase())
+                    );
+                }
+                console.log(`tart index: ${startIndex}+end index: ${endIndex}`);
+                const nextItems = itemsToRender.slice(startIndex, endIndex);
+
+                renderItems(nextItems);
+
+                currentPage++;
+            }
+
+
+
+            const debouncedScroll = _.debounce(() => {
+                const loadingSpinner = document.getElementById('loadingSpinner');
+
+
+                loadingSpinner.style.display = 'block';
+                if (isScrolledToBottom()) {
+                    loadMoreItems();
+                }
+                setTimeout(() => {
+                    loadingSpinner.style.display = 'none';
+                }, 1000);
+
+            }, 1000);
+            function isScrolledToBottom() {
+                return (window.innerHeight + window.scrollY) + 5 >= document.body.offsetHeight;
+            }
+
+            window.addEventListener('scroll', function () {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    lastScrollY = window.scrollY;
+                    console.log(`lastscrool :${lastScrollY}`);
+                }, 2000);
+
+                if (isScrolledToBottom()) {
+                    debouncedScroll();
+                }
+            });
+            let scrollTimeout;
+
+        </script>
+    </div>
+</body>
+
+</html>
