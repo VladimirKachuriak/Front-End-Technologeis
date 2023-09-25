@@ -1,0 +1,11 @@
+<p>my-component works!</p>
+<p>Price: {{price | pricePipe}}</p>
+
+<div [ngClass]="{'class1': isClass1, 'class2': isClass2}">
+    This element has dynamic classes.
+</div>
+<mat-list>
+    <mat-list-item *ngFor="let item of items">
+        {{ item }}
+    </mat-list-item>
+</mat-list>

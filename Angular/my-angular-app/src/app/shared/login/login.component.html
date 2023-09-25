@@ -1,0 +1,17 @@
+<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+    <input matInput formControlName="username" placeholder="Username">
+    </mat-form-field>
+    <mat-form-field>
+    <input matInput type="password" formControlName="password" placeholder="Password">
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Log In</button>
+</form>
+<div *ngIf="isLoggedIn">
+    <p>login suss</p>
+    <app-welcome [username]="'new User'"></app-welcome>
+    <app-welcome (message)="welcomeInit($event)"></app-welcome>
+</div>
+
+<!-- <app-login-form (loggedIn)="onLoggedIn($event)"></app-login-form> -->
